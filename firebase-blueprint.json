@@ -1,0 +1,91 @@
+{
+  "entities": {
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Student score record for the 4th grade typing game hall of fame",
+      "type": "object",
+      "properties": {
+        "nickname": {
+          "type": "string",
+          "description": "Student nickname",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "score": {
+          "type": "number",
+          "description": "Game score earned by the student"
+        },
+        "stageReached": {
+          "type": "number",
+          "description": "Final stage reached (1, 2, or 3)"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the score was recorded"
+        }
+      },
+      "required": ["nickname", "score", "stageReached", "createdAt"]
+    },
+    "AdminSettings": {
+      "title": "AdminSettings",
+      "description": "Teacher admin configuration and password hash",
+      "type": "object",
+      "properties": {
+        "passwordHash": {
+          "type": "string",
+          "description": "SHA-256 hash of teacher password",
+          "maxLength": 128
+        },
+        "isConfigured": {
+          "type": "boolean",
+          "description": "Whether the teacher password has been set"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["passwordHash", "isConfigured", "updatedAt"]
+    },
+    "ConnectionTest": {
+      "title": "ConnectionTest",
+      "description": "Diagnostic document used to verify Firestore create, read, update, delete functionality",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Test status text",
+          "maxLength": 50
+        },
+        "testedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the test"
+        }
+      },
+      "required": ["status", "testedAt"]
+    }
+  },
+  "firestore": {
+    "/leaderboard/{entryId}": {
+      "schema": {
+        "$ref": "#/entities/LeaderboardEntry"
+      },
+      "description": "Collection storing student hall of fame scores"
+    },
+    "/settings/{settingId}": {
+      "schema": {
+        "$ref": "#/entities/AdminSettings"
+      },
+      "description": "Teacher settings and configuration"
+    },
+    "/_connection_tests/{testId}": {
+      "schema": {
+        "$ref": "#/entities/ConnectionTest"
+      },
+      "description": "Temporary documents used during connection verification"
+    }
+  }
+}

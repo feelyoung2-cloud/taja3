@@ -1,0 +1,8 @@
+{
+  "name": "4학년 교과 어휘 타자 연습 게임",
+  "description": "초등학교 4학년 국어, 사회, 과학 교과의 핵심 필수 어휘를 하늘에서 떨어지는 단어를 맞추며 재미있게 익히는 칠판 테마 타자 게임입니다.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

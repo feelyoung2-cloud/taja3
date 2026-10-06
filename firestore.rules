@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidLeaderboard(data) {
+      return data.keys().hasAll(['nickname', 'score', 'stageReached', 'createdAt'])
+        && data.keys().hasOnly(['nickname', 'score', 'stageReached', 'createdAt', 'timestamp'])
+        && data.nickname is string
+        && data.nickname.size() >= 1
+        && data.nickname.size() <= 30
+        && data.score is number
+        && data.score >= 0
+        && data.score <= 1000000
+        && data.stageReached is number
+        && data.stageReached >= 1
+        && data.stageReached <= 3;
+    }
+
+    function isValidAdminSettings(data) {
+      return data.keys().hasAll(['passwordHash', 'isConfigured', 'updatedAt'])
+        && data.passwordHash is string
+        && data.passwordHash.size() <= 128
+        && data.isConfigured is bool;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Hall of Fame Leaderboard
+    match /leaderboard/{entryId} {
+      allow read: if true;
+      allow create: if isValidLeaderboard(request.resource.data);
+      allow update: if false;
+      allow delete: if true;
+    }
+
+    // Teacher settings
+    match /settings/{settingId} {
+      allow read: if true;
+      allow create, update: if settingId == 'teacher' && isValidAdminSettings(request.resource.data);
+      allow delete: if false;
+    }
+
+    // Connection verification diagnostics
+    match /_connection_tests/{testId} {
+      allow read, write: if true;
+    }
+  }
+}
